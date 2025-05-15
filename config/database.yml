@@ -1,0 +1,37 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: finance_tracker_development
+  username: postgres
+  password: khadija
+  host: localhost
+
+test:
+  <<: *default
+  database: finance_tracker_test
+  username: postgres
+  password: khadija
+  host: localhost
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: finance_tracker_production
+    username: finance_tracker
+    password: <%= ENV["FINANCE_TRACKER_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: finance_tracker_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: finance_tracker_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: finance_tracker_production_cable
+    migrations_paths: db/cable_migrate
